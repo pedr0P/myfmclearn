@@ -9,16 +9,20 @@ variable (P Q R : Prop)
 
 theorem doubleneg_intro :
   P → ¬ ¬ P  := by
-  sorry
+  intro p
+  intro np
+  apply np p
 
 theorem doubleneg_elim :
   ¬ ¬ P → P  := by
-  sorry
+  intro nnp
+  by_cases npop : P
+  · exact npop
+  · contradiction
 
 theorem doubleneg_law :
   ¬ ¬ P ↔ P  := by
-  sorry
-
+    exact ⟨doubleneg_elim P, doubleneg_intro P⟩
 
 ------------------------------------------------
 -- Commutativity of ∨,∧
@@ -26,11 +30,21 @@ theorem doubleneg_law :
 
 theorem disj_comm :
   (P ∨ Q) → (Q ∨ P)  := by
-  sorry
+    intro poq
+    cases poq with
+    | inl p =>
+    right
+    exact p
+
+    | inr q =>
+    left
+    exact q
+
 
 theorem conj_comm :
   (P ∧ Q) → (Q ∧ P)  := by
-  sorry
+  intro peq
+  exact ⟨peq.2, peq.1⟩
 
 
 ------------------------------------------------
@@ -39,11 +53,18 @@ theorem conj_comm :
 
 theorem impl_as_disj_converse :
   (¬ P ∨ Q) → (P → Q)  := by
-  sorry
+  intro hnpoq p
+  cases hnpoq with
+  | inl np => contradiction
+  | inr q => exact q
 
 theorem disj_as_impl :
   (P ∨ Q) → (¬ P → Q)  := by
-  sorry
+  intro hpoq
+  intro np
+  cases hpoq with
+  | inl p => contradiction
+  | inr q => exact q
 
 
 ------------------------------------------------
@@ -52,15 +73,23 @@ theorem disj_as_impl :
 
 theorem impl_as_contrapositive :
   (P → Q) → (¬ Q → ¬ P)  := by
-  sorry
+    intro hpq
+    intro nq
+    intro p
+    exact nq (hpq p)
 
 theorem impl_as_contrapositive_converse :
   (¬ Q → ¬ P) → (P → Q)  := by
-  sorry
+    intro nqnp
+    intro p
+    by_cases q : Q
+    · exact q
+    · specialize (nqnp q)
+      contradiction
 
 theorem contrapositive_law :
   (P → Q) ↔ (¬ Q → ¬ P)  := by
-  sorry
+    exact ⟨impl_as_contrapositive P Q, impl_as_contrapositive_converse P Q⟩
 
 
 ------------------------------------------------
@@ -78,7 +107,8 @@ theorem lem_irrefutable :
 
 theorem peirce_law_weak :
   ((P → Q) → P) → ¬ ¬ P  := by
-  sorry
+    intro h hp
+    
 
 
 ------------------------------------------------
@@ -202,7 +232,7 @@ theorem weaken_conj_left :
 
 theorem disj_idem :
   (P ∨ P) ↔ P  := by
-  sorry
+    sorry
 
 theorem conj_idem :
   (P ∧ P) ↔ P := by
@@ -215,11 +245,12 @@ theorem conj_idem :
 
 theorem false_bottom :
   False → P := by
-  sorry
+    exact False.elim
 
 theorem true_top :
   P → True  := by
-  sorry
+    intro p
+    exact True.intro
 
 
 end propositional
