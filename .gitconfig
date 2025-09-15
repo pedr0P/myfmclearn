@@ -1,0 +1,8 @@
+[user]
+    name = Pedro V. B. Pereira
+    email = pedrovbpereira10@gmail.com
+[core]
+    editor = nvim
+[alias]
+   last = log -1 HEAD
+   part = add --patch
