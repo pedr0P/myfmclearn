@@ -33,12 +33,11 @@ theorem disj_comm :
     intro poq
     cases poq with
     | inl p =>
-    right
-    exact p
-
+        right
+        exact p
     | inr q =>
-    left
-    exact q
+        left
+        exact q
 
 
 theorem conj_comm :
@@ -98,7 +97,9 @@ theorem contrapositive_law :
 
 theorem lem_irrefutable :
   ¬ ¬ (P ∨ ¬ P)  := by
-  sorry
+    intro h
+    sorry
+    
 
 
 ------------------------------------------------
@@ -108,10 +109,10 @@ theorem lem_irrefutable :
 theorem peirce_law_weak :
   ((P → Q) → P) → ¬ ¬ P  := by
     intro h hp
-    by_cases p : P
-    ·
-    ·
-    
+    have this : (P → Q) := by
+      intro p
+      contradiction
+    exact hp (h this)
 
 
 ------------------------------------------------
@@ -120,8 +121,9 @@ theorem peirce_law_weak :
 
 theorem impl_linear :
   (P → Q) ∨ (Q → P)  := by
-  sorry
-
+    left
+    intro p
+    sorry
 
 ------------------------------------------------
 -- Interdefinability of ∨,∧
@@ -129,11 +131,23 @@ theorem impl_linear :
 
 theorem disj_as_negconj :
   P ∨ Q → ¬ (¬ P ∧ ¬ Q)  := by
-  sorry
+    intro h
+    intro hn
+    cases h with
+    | inl l =>
+        exact hn.1 l
+    | inr r =>
+        exact hn.2 r
 
 theorem conj_as_negdisj :
   P ∧ Q → ¬ (¬ P ∨ ¬ Q)  := by
-  sorry
+    intro h
+    intro hn
+    cases hn with
+    | inl l =>
+        exact l h.1
+    | inr r =>
+        exact r h.2
 
 
 ------------------------------------------------
@@ -142,27 +156,44 @@ theorem conj_as_negdisj :
 
 theorem demorgan_disj :
   ¬ (P ∨ Q) → (¬ P ∧ ¬ Q)  := by
-  sorry
+    intro h
+    constructor
+    · intro p
+      sorry
+    · sorry
 
 theorem demorgan_disj_converse :
   (¬ P ∧ ¬ Q) → ¬ (P ∨ Q)  := by
-  sorry
+    intro h
+    intro hn
+    cases hn with
+    | inr r =>
+        exact h.2 r
+    | inl l =>
+        exact h.1 l
 
 theorem demorgan_conj :
   ¬ (P ∧ Q) → (¬ Q ∨ ¬ P)  := by
-  sorry
+    intro h
+    sorry
 
 theorem demorgan_conj_converse :
   (¬ Q ∨ ¬ P) → ¬ (P ∧ Q)  := by
-  sorry
+    intro h
+    intro hpeq
+    cases h with
+    | inl l =>
+        exact l hpeq.2
+    | inr r =>
+        exact r hpeq.1
 
 theorem demorgan_conj_law :
   ¬ (P ∧ Q) ↔ (¬ Q ∨ ¬ P)  := by
-  sorry
+    exact ⟨demorgan_conj P Q, demorgan_conj_converse P Q⟩
 
 theorem demorgan_disj_law :
   ¬ (P ∨ Q) ↔ (¬ P ∧ ¬ Q)  := by
-  sorry
+    exact ⟨demorgan_disj P Q, demorgan_disj_converse P Q⟩
 
 
 ------------------------------------------------
@@ -171,20 +202,71 @@ theorem demorgan_disj_law :
 
 theorem distr_conj_disj :
   P ∧ (Q ∨ R) → (P ∧ Q) ∨ (P ∧ R)  := by
-  sorry
+    intro h
+    obtain ⟨hl, hr⟩ := h
+    cases hr with
+    | inl l =>
+        left
+        exact ⟨hl, l⟩
+    | inr r =>
+        right
+        exact ⟨hl, r⟩
 
 theorem distr_conj_disj_converse :
   (P ∧ Q) ∨ (P ∧ R) → P ∧ (Q ∨ R)  := by
-  sorry
+    intro h
+    cases h with
+    | inl l =>
+        constructor
+        · exact l.1
+        · left
+          exact l.2
+    | inr r =>
+        constructor
+        · exact r.1
+        · right
+          exact r.2
 
 theorem distr_disj_conj :
   P ∨ (Q ∧ R) → (P ∨ Q) ∧ (P ∨ R)  := by
-  sorry
+    intro h
+    constructor
+    · cases h with
+      | inl l =>
+          left
+          exact l
+      | inr r =>
+          right
+          exact r.1
+    · cases h with
+      | inl l =>
+          left
+          exact l
+      | inr r =>
+          right
+          exact r.2
+
 
 theorem distr_disj_conj_converse :
   (P ∨ Q) ∧ (P ∨ R) → P ∨ (Q ∧ R)  := by
-  sorry
+    intro h
+    obtain ⟨hl, hr⟩ := h
+    cases hl with
+    | inl l =>
+        left
+        exact l
+    | inr r =>
+        cases hr with
+          | inl ll =>
+            left
+            exact ll
+          | inr rr =>
+            right
+            constructor
+            · exact r
+            · exact rr
 
+        
 
 ------------------------------------------------
 -- Currying
@@ -192,21 +274,31 @@ theorem distr_disj_conj_converse :
 
 theorem curry_prop :
   ((P ∧ Q) → R) → (P → (Q → R))  := by
-  sorry
+    intro h
+    intro p
+    intro q
+    have this : (P ∧ Q) := by
+      constructor
+      · exact p
+      · exact q
+    exact h this
 
 theorem uncurry_prop :
   (P → (Q → R)) → ((P ∧ Q) → R)  := by
-  sorry
+    intro h
+    intro hpeq
+    apply h hpeq.1
+    exact hpeq.2
 
-
+    /- exact (h hpeq.1) hpeq.2 -/
 ------------------------------------------------
 -- Reflexivity of →
 ------------------------------------------------
 
 theorem impl_refl :
   P → P  := by
-  sorry
-
+    intro p
+    exact p
 
 ------------------------------------------------
 -- Weakening and contraction
@@ -214,19 +306,25 @@ theorem impl_refl :
 
 theorem weaken_disj_right :
   P → (P ∨ Q)  := by
-  sorry
+    intro p
+    left
+    exact p
 
 theorem weaken_disj_left :
   Q → (P ∨ Q)  := by
-  sorry
+    intro q
+    right
+    exact q
 
 theorem weaken_conj_right :
   (P ∧ Q) → P  := by
-  sorry
+    intro h
+    exact h.1
 
 theorem weaken_conj_left :
   (P ∧ Q) → Q  := by
-  sorry
+    intro h
+    exact h.2
 
 
 ------------------------------------------------
@@ -235,11 +333,26 @@ theorem weaken_conj_left :
 
 theorem disj_idem :
   (P ∨ P) ↔ P  := by
-    sorry
+    constructor
+    · intro pop
+      cases pop with
+      | inr r =>
+          exact r
+      | inl l =>
+          exact l
+    · intro p
+      right
+      exact p
 
 theorem conj_idem :
   (P ∧ P) ↔ P := by
-  sorry
+    constructor
+    · intro pep
+      exact pep.1
+    · intro p
+      constructor
+      · exact p
+      · exact p
 
 
 ------------------------------------------------
