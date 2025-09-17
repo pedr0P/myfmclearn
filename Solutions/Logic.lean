@@ -434,22 +434,23 @@ theorem demorgan_exists_converse :
 theorem demorgan_forall :
   ¬ (∀ x, P x) → (∃ x, ¬ P x)  := by
   intro h
-  have this : (∀ x, P x) := by
-    intro x
-    sorry
+  sorry
 
 theorem demorgan_forall_converse :
   (∃ x, ¬ P x) → ¬ (∀ x, P x)  := by
-  sorry
+    intro h
+    intro oh
+    obtain ⟨x, xlegal⟩ := h
+    exact xlegal (oh x)
+
 
 theorem demorgan_forall_law :
   ¬ (∀ x, P x) ↔ (∃ x, ¬ P x)  := by
-  sorry
+    exact ⟨ demorgan_forall U P, demorgan_forall_converse U P⟩
 
 theorem demorgan_exists_law :
   ¬ (∃ x, P x) ↔ (∀ x, ¬ P x)  := by
-  sorry
-
+    exact ⟨ demorgan_exists U P, demorgan_exists_converse U P⟩
 
 ------------------------------------------------
 -- Interdefinability of ∃,∀
@@ -457,28 +458,37 @@ theorem demorgan_exists_law :
 
 theorem exists_as_neg_forall :
   (∃ x, P x) → ¬ (∀ x, ¬ P x)  := by
-  sorry
+    intro h
+    intro oh
+    obtain ⟨x, px⟩ := h
+    exact (oh x) px
 
 theorem forall_as_neg_exists :
   (∀ x, P x) → ¬ (∃ x, ¬ P x)  := by
-  sorry
+    intro h
+    intro oh
+    obtain ⟨x, px⟩ := oh
+    exact px (h x)
 
 theorem forall_as_neg_exists_converse :
   ¬ (∃ x, ¬ P x) → (∀ x, P x)  := by
-  sorry
-
+    intro h
+    intro x
+    sorry
+    
 theorem exists_as_neg_forall_converse :
   ¬ (∀ x, ¬ P x) → (∃ x, P x)  := by
-  sorry
+    intro h
+    have this : (∀ x, )
+    sorry
 
 theorem forall_as_neg_exists_law :
   (∀ x, P x) ↔ ¬ (∃ x, ¬ P x)  := by
-  sorry
+    exact ⟨ forall_as_neg_exists U P, forall_as_neg_exists_converse U P ⟩
 
 theorem exists_as_neg_forall_law :
   (∃ x, P x) ↔ ¬ (∀ x, ¬ P x)  := by
-  sorry
-
+    exact ⟨ exists_as_neg_forall U P, exists_as_neg_forall_converse U P ⟩
 
 ------------------------------------------------
 --  Distributivity between quantifiers
@@ -486,28 +496,67 @@ theorem exists_as_neg_forall_law :
 
 theorem exists_conj_as_conj_exists :
   (∃ x, P x ∧ Q x) → (∃ x, P x) ∧ (∃ x, Q x)  := by
-  sorry
+    intro h
+    constructor
+    · obtain ⟨x, peq⟩ := h
+      obtain ⟨l,r⟩ := peq
+      exists x 
+    · obtain ⟨x, peq⟩ := h
+      obtain ⟨l,r⟩ := peq
+      exists x 
 
 theorem exists_disj_as_disj_exists :
   (∃ x, P x ∨ Q x) → (∃ x, P x) ∨ (∃ x, Q x)  := by
-  sorry
+    intro h
+    obtain ⟨x, poq⟩ := h
+    rcases poq with l|r
+    · left
+      exists x
+    · right
+      exists x
 
 theorem exists_disj_as_disj_exists_converse :
   (∃ x, P x) ∨ (∃ x, Q x) → (∃ x, P x ∨ Q x)  := by
-  sorry
+    intro h
+    rcases h with l|r
+    · obtain ⟨x,px⟩ := l
+      exists x
+      left
+      exact px
+    · obtain ⟨x,qx⟩ := r
+      exists x
+      right
+      exact qx
 
 theorem forall_conj_as_conj_forall :
   (∀ x, P x ∧ Q x) → (∀ x, P x) ∧ (∀ x, Q x)  := by
-  sorry
+    intro h
+    constructor
+    · intro x
+      specialize h x
+      exact h.1
+    · intro x
+      specialize h x
+      exact h.2
 
 theorem forall_conj_as_conj_forall_converse :
   (∀ x, P x) ∧ (∀ x, Q x) → (∀ x, P x ∧ Q x)  := by
-  sorry
+    intro h
+    intro x
+    obtain ⟨px,qx⟩ := h
+    constructor
+    · exact px x
+    · exact qx x
 
 theorem forall_disj_as_disj_forall_converse :
   (∀ x, P x) ∨ (∀ x, Q x) → (∀ x, P x ∨ Q x)  := by
-  sorry
-
+    intro h
+    intro x
+    rcases h with l|r
+    · left
+      exact l x
+    · right
+      exact r x
 
 end predicate
 
