@@ -434,7 +434,17 @@ theorem demorgan_exists_converse :
 theorem demorgan_forall :
   ¬ (∀ x, P x) → (∃ x, ¬ P x)  := by
     intro h
-    sorry
+    by_cases m : (∃ x, ¬ P x)
+    · exact m
+    · have this: ¬ (∃ x, ¬ P x) → (∀ x, P x) := by
+        intro h
+        intro x
+        false_or_by_contra
+        have this: (∃ x, ¬ P x) := by
+          exists x
+        contradiction
+      false_or_by_contra
+      exact h (this m)
 
 theorem demorgan_forall_converse :
   (∃ x, ¬ P x) → ¬ (∀ x, P x)  := by
@@ -474,15 +484,18 @@ theorem forall_as_neg_exists_converse :
   ¬ (∃ x, ¬ P x) → (∀ x, P x)  := by
     intro h
     intro x
-    have this : (∃ x, P x) := by
-      sorry
-    sorry
-
+    false_or_by_contra
+    have : (∃ x, ¬ P x) := by
+      exists x
+    contradiction
     
 theorem exists_as_neg_forall_converse :
   ¬ (∀ x, ¬ P x) → (∃ x, P x)  := by
     intro nhan
-    sorry
+    by_cases mm : (∃ x, P x)
+    · exact mm
+    · exfalso
+      exact nhan (demorgan_exists U P mm)
 
 
 theorem forall_as_neg_exists_law :
