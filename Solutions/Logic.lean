@@ -433,8 +433,8 @@ theorem demorgan_exists_converse :
 
 theorem demorgan_forall :
   ¬ (∀ x, P x) → (∃ x, ¬ P x)  := by
-  intro h
-  sorry
+    intro h
+    sorry
 
 theorem demorgan_forall_converse :
   (∃ x, ¬ P x) → ¬ (∀ x, P x)  := by
@@ -474,13 +474,16 @@ theorem forall_as_neg_exists_converse :
   ¬ (∃ x, ¬ P x) → (∀ x, P x)  := by
     intro h
     intro x
+    have this : (∃ x, P x) := by
+      sorry
     sorry
+
     
 theorem exists_as_neg_forall_converse :
   ¬ (∀ x, ¬ P x) → (∃ x, P x)  := by
-    intro h
-    have this : (∀ x, )
+    intro nhan
     sorry
+
 
 theorem forall_as_neg_exists_law :
   (∀ x, P x) ↔ ¬ (∃ x, ¬ P x)  := by
@@ -576,7 +579,10 @@ variable (D : U → Prop)
 -- D x: «x drinks»
 theorem drinker :
   ∃ p, (D p → ∀ x, D x)  := by
-  sorry
+    have : ¬(∃ p, (D p → ∀ x, ¬ D x)) := by
+      intro h
+      obtain ⟨x, dx⟩ := h
+      sorry
 
 ------------------------------------------------
 --  Russell's paradox
@@ -590,7 +596,12 @@ variable (S : U → U → Prop)
 -- S x y: «x shaves y»
 theorem russell :
   ¬ ∃ b, ∀ x, (S b x ↔ ¬ S x x)  := by
-  sorry
+    intro h
+    obtain ⟨l, r⟩ := h
+    sorry
+
+
+
 
 
 end bonus
