@@ -95,10 +95,19 @@ theorem contrapositive_law :
 -- Irrefutability of LEM[P]
 ------------------------------------------------
 
+-- CREDITS: Zulip discussion do Alvaro e Pedro Lúcio (e Thanos)
+-- (Bobeei de novo)
 theorem lem_irrefutable :
   ¬ ¬ (P ∨ ¬ P)  := by
     intro h
-    sorry
+    have pnp1 : (P ∨ ¬ P) := by
+      right
+      intro p
+      have pnp2 : (P ∨ ¬ P) := by
+        left
+        exact p
+      exact h pnp2
+    exact h pnp1
     
 
 
@@ -119,11 +128,17 @@ theorem peirce_law_weak :
 -- Linearity of →
 ------------------------------------------------
 
+-- CREDITS: Zulip conversation do Pedro Lúcio com a Esther (e Thanos)!
+-- (Fiquei preso nesse por um bom tempo e fiz bobera por não ter pedido ajuda.)
 theorem impl_linear :
   (P → Q) ∨ (Q → P)  := by
-    left
-    intro p
-    sorry
+    by_cases p : P
+    · right
+      intro q
+      exact p
+    · left
+      intro pp
+      contradiction
 
 ------------------------------------------------
 -- Interdefinability of ∨,∧
@@ -159,8 +174,15 @@ theorem demorgan_disj :
     intro h
     constructor
     · intro p
-      sorry
-    · sorry
+      have poq : (P ∨ Q) := by
+        left
+        exact p
+      exact h poq
+    · intro q
+      have poq : (P ∨ Q) := by
+        right
+        exact q
+      exact h poq
 
 theorem demorgan_disj_converse :
   (¬ P ∧ ¬ Q) → ¬ (P ∨ Q)  := by
@@ -171,11 +193,20 @@ theorem demorgan_disj_converse :
         exact h.2 r
     | inl l =>
         exact h.1 l
-
+set_option pp.parens true
 theorem demorgan_conj :
   ¬ (P ∧ Q) → (¬ Q ∨ ¬ P)  := by
     intro h
-    sorry
+    by_cases q : Q
+    · by_cases p : P
+      · have this : (P ∧ Q) := by
+          exact ⟨p, q⟩
+        exfalso
+        exact h this
+      · right
+        exact p
+    · left
+      exact q
 
 theorem demorgan_conj_converse :
   (¬ Q ∨ ¬ P) → ¬ (P ∧ Q)  := by
@@ -266,7 +297,7 @@ theorem distr_disj_conj_converse :
             · exact r
             · exact rr
 
-        
+
 
 ------------------------------------------------
 -- Currying
