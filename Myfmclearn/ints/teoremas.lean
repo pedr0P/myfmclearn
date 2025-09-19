@@ -2,6 +2,11 @@ import Myfmclearn.ints.axioms
 
 variable (a b c x y z : Int)
 
+theorem ZM_AnnR :
+      ∀ (a : Int), a * 0 = 0
+    := by
+        sorry
+
 theorem ZA_idL :
       ∀ (a : Int), 0 + a = a
     := by

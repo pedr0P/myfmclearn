@@ -13,5 +13,5 @@ axiom ZAM_DistR : ∀ (x y d : Int), (x + y) * d = x * d + y * d
 
 axiom ZM_Ass : ∀ (x y z : Int), x * y * z = x * (y * z)
 axiom ZM_Com : ∀ (x y : Int), x * y = y * x
-axiom ZM_IdR : ∀ (x : Int), x * 0 = 0
+/- axiom ZM_IdR : ∀ (x : Int), x * 0 = 0 -/
 axiom ZM_One_IdR : ∀ (x : Int), x * 1 = x

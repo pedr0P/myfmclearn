@@ -18,4 +18,4 @@ theorem C1 :
       ∀ (a : Int), (-1) * a = -a
     := by
       intro a
-      sorry
+      

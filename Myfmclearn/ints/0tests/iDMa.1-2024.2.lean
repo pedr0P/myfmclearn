@@ -2,6 +2,16 @@ import Myfmclearn.ints.axioms
 
 variable (a b c x y z : Int)
 variable (P Q : Prop)
+theorem ZM_AnnR :
+      ∀ (x : Int), x * 0 = 0
+    := by
+      intro a
+      rw [← ZA_InvR a]
+      have this : (a + (a * 0) = a) := by
+        rw [← ZM_One_IdR a]
+      sorry
+
+
 
 theorem B1 :
       ¬ P ∨ ¬ Q → ¬ (P ∧ Q)
@@ -29,7 +39,7 @@ theorem C2 :
       intro a
       have : (-(-a) + (-a) = 0) := by
         rw [ZA_Com (-(-a)) (-a), ZA_InvR (-a), Z_Refl 0]
-        sorry
+      sorry
 
 axiom ZM_CanR : ∀ (u : Int), ¬ (u = 0) → ∀ (a b : Int), a * u = b * u → a = b
 
@@ -58,6 +68,13 @@ theorem CanR :
       intro hc
       intro a b
       intro h
+      have : (c * (b + (-a))) = 0 := by
+        rw [ZM_Com, ZAM_DistR b (-a) c]
+        rw [← h]
+        rw [← ZAM_DistR a (-a) c]
+        rw [ZA_InvR]
+
+
 
 
 
