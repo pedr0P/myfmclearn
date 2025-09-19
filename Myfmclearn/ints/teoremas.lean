@@ -18,22 +18,36 @@ theorem Z_Inv :
       ∀ (a : Int), -(-a) = a
     := by
       intro a
-      have : ∀ (a : Int ), -a + -(-a) = 0 := by
-        intro x
-        rw [ZA_InvR (-x), Z_Refl 0]
-      specialize this a
-      sorry
+      have : a = -(-a) := by
+        calc
+          a = a + 0 := by rw [ZA_IdR a]
+          _ = a + (-a + -(-a)) := by rw [ZA_InvR (-a)]
+          _ = (a + -a) + -(-a) := by rw [← ZA_Ass a (-a) (-(-a))]
+          _ = 0 + -(-a) := by rw [ZA_InvR a]
+          _ = -(-a) := by rw [ZA_idL (-(-a))]
+      rw [Z_Symm a (-(-a))]
+      exact this
 
 theorem ZA_idU :
-      ∀ (u v : Int), (u + v = u) ∧ (v + 0 = v) → u = v
+      ∀ (u v : Int), (u + v = u) ∧ (v + u = v) → u = v
       := by
+        intro u v
+        intro h
+        obtain ⟨l, r⟩ := h
+        apply l.subst
+        rw [ZA_Com u v]
+        exact r
+
 
 theorem ZA_CanR :
       ∀ (c x y : Int), x + c = y + c → x = y
     := by
       intro c x y
       intro h
-      sorry
+      rw [← ZA_IdR x, ← ZA_IdR y]
+      rw [← ZA_InvR c]
+      rw [← ZA_Ass x c (-c), ← ZA_Ass y c (-c)]
+      congr
 
 
 
