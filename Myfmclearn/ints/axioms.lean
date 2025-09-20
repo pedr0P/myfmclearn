@@ -5,13 +5,13 @@ axiom Z_Symm : ∀ (a b : Int), a = b → b = a
 axiom Z_Trans : ∀ (a b c : Int), a = b ∧ b = c → a = c
 
 axiom ZA_Ass : ∀ (x y z : Int), (x + y) + z = x + (y + z)
-axiom ZA_Com : ∀ (x y : Int), x + y = y + x
 axiom ZA_IdR : ∀ (x : Int), x + 0 = x
+axiom ZA_Com : ∀ (x y : Int), x + y = y + x
 axiom ZA_InvR : ∀ (x : Int), x + (-x) = 0
-
-axiom ZAM_DistR : ∀ (x y d : Int), (x + y) * d = x * d + y * d
+axiom Z_NZD : ∀ (x y : Int), x * y = 0 → a = 0 ∨ b = 0
 
 axiom ZM_Ass : ∀ (x y z : Int), x * y * z = x * (y * z)
+axiom ZM_IdR : ∀ (x : Int), x * 1 = x
 axiom ZM_Com : ∀ (x y : Int), x * y = y * x
-/- axiom ZM_IdR : ∀ (x : Int), x * 0 = 0 -/
-axiom ZM_One_IdR : ∀ (x : Int), x * 1 = x
+
+axiom Z_DistR : ∀ (x y d : Int), (x + y) * d = x * d + y * d
